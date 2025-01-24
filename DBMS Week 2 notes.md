@@ -229,3 +229,152 @@ from instructor, teaches
 #Generates every possible instructor-teaches pair with all attributes from both relations
 #For common attributes, attributes in the resulting table are renamed using the relation name eg instructor.ID
 ```
+
+# L2.4 - Intro to SQL p2
+
+## Cartesian Product
+* Find the cartesian product *instructor* X *teaches*
+```
+select *
+from instructor, teaches
+```
+*  Generates every possible instructor-teaches pair, with all attributes from both relations
+* Cartesian product not very useful directly, but useful combined with where-clause condition (select operation in relational algebra)
+Example:
+```
+# Example - 1: All instructors teaching a course
+select name, course_id
+from instructor, teaches
+where instructor.ID = teached.ID
+
+# Example - 2: All instructors in art department who have taught some course
+select name, course_id
+from instructor, teaches
+where instructor.ID = teaches.ID and instructor.dept_name = 'Art'
+```
+
+## Rename AS Operation
+* SQL allows renaming relations and attributes using the as clause:
+		old_name as new_name
+```
+# Example: Find names of all instructors who have a higher salary than some instructor in Comp. Sci.
+
+select distinct T.name
+from instructor as T, instructor as S
+where T.salary > S.salary and S.dept_name = 'Comp Sci'
+```
+* Keyboard *as* is optional and may be omitted
+		instructor as T = instructor T
+
+## String Operations
+
+* SQL includes a string-matching operator for comparisons on character things. The operator ***like*** uses patterns that are described using two special character
+	* % - matches any substring
+	* __ - character matches any character
+
+```
+# Find Instructor whose name includes substring "dar"
+select name
+from instructor
+where name like "%dar%"
+
+# Match the string "100%"
+like '100%' escape '\'
+#Use backlash as the escape character
+```
+
+* Patterns are case sensitive
+* Pattern matching examples
+	* Intro% - matches any string beginning with Intro
+	* %Comp% - matches any string containing Comp as substring
+	* '_ _ _' - matches any string of exactly three characters
+	* '_ _ _ %' - matches any string of at least three characters
+* SQL supports a variety of string operations such as 
+	* Concatenation "||"
+	* upper<->lower
+	* string length, extract substring, etc
+
+## Ordering the Display of Tuples
+
+```
+# list in alphabetic order the names of all instructors
+selct distinct name
+from instructor
+order by name
+
+# can specify asc and desc for ascending and descending, ascending is default
+order by name desc
+
+# Can sort on multiple attributes
+order by dept_name, name
+```
+
+## Select the number of Tuples in Output
+* **Select Top** clause is used to specify the number of records to return
+* useful on large tables with thousands of records. Returning a large number of records can impact performance
+```
+select top 10 distinct name
+frrom instructor
+```
+* Not all DBMS support the SELECT TOP clause
+	* SQL Server, MS Access support
+	* MySQL  -> limit clause
+	* oracle uses **fetch first n rows only and rownum**
+```
+	select distinct name
+	from instructor
+	order by name
+	fetch first 10 rows only
+```
+
+## Where Clause Predicates
+* **between** comparison operator
+```
+# find names of all instructors with salary between 90k and 100k
+select name
+from instructor
+where salary between 90000 and 100000
+```
+* Tuple comparison
+```
+select name, course_id
+from teaches, instructor
+where (instructor.ID, dept_name) = (teaches.ID, Biology)
+```
+
+## In Operator
+* The **in** operator allows you to specify multiple values in a **where** clause, shorthand for multiple or conditions
+```
+select name
+from instructor
+where dept_name in ("Comp Sci.", "Biology")
+```
+
+# Duplicates
+* In relation with duplicates, SQL can define how many copies of tuples appear in the result
+* Multiset in algebra means set where the same object can occur multiple times
+* Multiset versions of some of the relational algebra operators - given multiset relations r1 and r2
+	* **σ<sub>theta</sub> (r1):** Is there are c1 copes of tuple t1 inside r1, and t1 satisfies selections σ<sub>theta</sub>, then there are c1 copes of t1 in σ<sub>theta</sub> (r1)
+	* **∏<sub>a</sub>(r):** For each copy of tuple t1 in r1, there is a copy of tuple ∏<sub>a</sub>(t1) in ∏<sub>a</sub>(r1) where ∏<sub>a</sub>(t1) denotes the projection of the single tuple t1
+	* **r1 x r2:** If there are c1 copies of the tuple t1 in r1 and c2 copies of tuple t2 in r2, there are c1 x c2 copies of the tuple t1.t2 in r1 x r2
+
+```
+r1 = {(1,a), (2,a)}
+r1 = {(2), (3), (3)}
+
+∏(r1) = {(a),(a)} while ∏(r1) x r2 would be
+
+{(a,2), (a,2), (a,3), (a,3), (a,3), (a,3)}
+```
+
+```
+# SQL Duplicate semantics
+select A1, A2, ... , An
+from r1, r2, ... , rm
+where P
+```
+* The above is equivalent to the multiset relational algebra version of the expression:
+			∏<sub>A1, A2, ... , An</sub>(σ<sub>P</sub> (r1 x r2 x ... x rm))
+
+
+# L2.5 - Intro to SQL p3
