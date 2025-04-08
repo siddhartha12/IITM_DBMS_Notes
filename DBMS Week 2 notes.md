@@ -350,7 +350,7 @@ from instructor
 where dept_name in ("Comp Sci.", "Biology")
 ```
 
-# Duplicates
+## Duplicates
 * In relation with duplicates, SQL can define how many copies of tuples appear in the result
 * Multiset in algebra means set where the same object can occur multiple times
 * Multiset versions of some of the relational algebra operators - given multiset relations r1 and r2
@@ -378,3 +378,69 @@ where P
 
 
 # L2.5 - Intro to SQL p3
+## Set Operations
+* Union (A U B)
+* Intersect (A ^ B)
+* Except (A - B)
+The above operations automatically eliminates duplicates. To retain all duplicates, use corresponding multiset variations 
+* Union all
+* intersect all
+* except all
+Suppose a tuple occurs *m* time in **r** and *n* times in **s**, then it occurs:
+* m + n times in r union all s
+* min(m, n) times in t intersect all s
+* max(0, m-n) times in r except all s
+
+## Null Values
+* It is possible for tuples to have a null value, denoted by null for some of their attributes
+* *null* signifies an unknown value or that a value does not exist
+* the result of any expression involving *null* is *null* 
+	* Eg: 5 + *null* = *null*
+* The predicate *is null* can be used to check for null values
+	* Eg: select name from instructor where salary is null
+	* Comparison operators cannot be used for *null*
+	* Only *is null* and *is not null* can be used
+
+## Unknown Values
+* Taken 3 values - true, false, unknown
+* Any comparison with *null* returns unknown **EG:** 5 < *null*
+* using logical operators
+	* OR
+		* unknown or true -> true
+		* unknown or false -> unknown
+		* unknown or unknown -> unknown
+	* AND
+		* true and unknown -> unknown
+		* false and unknown -> false
+		* unknown and unknown -> unknown
+	* NOT
+		* (not unknown) -> unknown
+	* "P is unknown" evaluates to *true* if P evaluates to *unknown*
+	* result of **where** clause predicate is treated as false if it evaluates to unknown
+
+## Aggregate Functions
+These functions operate on the multiset of values of a column of a relation, and return a value
+* avg
+* min
+* max
+* sum
+* count
+
+### Group By
+```
+select dept_name, avg(salary) as avg_salary
+from instructor
+group by dept_name
+```
+
+### Having Clause
+```
+select dept_name, ID, avg(salary) as avg_salary
+from instructor
+group by dept_name
+having avg_salary > 42000
+```
+* predicates in the having clause are applied after the formation of groups whereas predicates in the where clause are applied before forming groups
+
+## Null values handling
+sum ignores null amounts, result is null if there is no non-null amount
