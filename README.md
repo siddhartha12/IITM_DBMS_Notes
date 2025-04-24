@@ -1,5 +1,5 @@
 # IITM_DBMS_Notes
-Notes for DBMS course towards Diploma in Programming from IITM. Will be making notes in Markdown and will be using Obsidian as the tool to edit the notes. Will be creating a regulat push schedule for the notes.
+Notes for DBMS course towards Diploma in Programming from IITM. Will be making notes in Markdown and will be using Obsidian as the tool to edit the notes. Will be creating a regular push schedule for the notes.
 
 |         |                                                |
 | ------- | ---------------------------------------------- |
@@ -16,3 +16,9 @@ Notes for DBMS course towards Diploma in Programming from IITM. Will be making n
 | WEEK 11 | Backup and Recovery                            |
 | WEEK 12 | Query Optimization and Conclusion              |
 |         |                                                |
+
+Notes best compatible with Obsidian. Screengrabs linking is allowed in the app. Any other app that can do that can effectively view and edit these.
+
+Took the course for Jan 2025 term, will add all the important study materials and tests here.
+
+Notes are incomplete, anyone who will study this in further batches, welcome to fork this repository, takes notes or modify mine and send in a pull request.
